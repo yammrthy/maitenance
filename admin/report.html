@@ -5,11 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Report Page</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Roboto', sans-serif;
       background-color: #edf1f5;
@@ -156,7 +152,7 @@
     <div class="title">Maintenance Reports</div>
     <div class="right-section">
       <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="Search...">
+        <input type="text" id="searchInput" placeholder="Search..." onkeyup="searchTable()">
         <img src="https://cdn-icons-png.flaticon.com/512/49/49116.png" alt="Search">
       </div>
       <div class="menu-icon" onclick="toggleMenu()">☰</div>
@@ -169,6 +165,8 @@
       </div>
     </div>
   </div>
+
+  <h1>Maintenance Reports</h1>
 
   <table id="reportTable">
     <thead>
@@ -222,6 +220,25 @@
       a.href = 'data:application/vnd.ms-excel,' + html;
       a.download = 'maintenance_reports.xls';
       a.click();
+    }
+
+    function searchTable() {
+      const input = document.getElementById("searchInput");
+      const filter = input.value.toLowerCase();
+      const table = document.getElementById("reportTable");
+      const tr = table.getElementsByTagName("tr");
+
+      for (let i = 1; i < tr.length; i++) {
+        const tds = tr[i].getElementsByTagName("td");
+        let show = false;
+        for (let j = 0; j < tds.length; j++) {
+          if (tds[j] && tds[j].innerText.toLowerCase().includes(filter)) {
+            show = true;
+            break;
+          }
+        }
+        tr[i].style.display = show ? "" : "none";
+      }
     }
   </script>
 
