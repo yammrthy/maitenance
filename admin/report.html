@@ -1,0 +1,48 @@
+<!-- report.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Page</title>
+    <style>
+        /* Add your styles here */
+    </style>
+</head>
+<body>
+    <h1>Maintenance Reports</h1>
+
+    <table id="reportTable">
+        <thead>
+            <tr>
+                <th>Vehicle ID</th>
+                <th>Vehicle IN Date</th>
+                <th>No of Days</th>
+                <th>Problem Identification</th>
+                <th>Spares Status</th>
+                <th>Maintenance Incharge</th>
+                <th>User Dept Contact</th>
+            </tr>
+        </thead>
+        <tbody id="reportBody"></tbody>
+    </table>
+
+    <script>
+        // On page load, populate the table with reports from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const reports = JSON.parse(localStorage.getItem('reports')) || [];
+            const reportBody = document.getElementById('reportBody');
+
+            reports.forEach(function(report) {
+                const row = document.createElement('tr');
+                report.forEach(function(cellData) {
+                    const cell = document.createElement('td');
+                    cell.textContent = cellData;
+                    row.appendChild(cell);
+                });
+                reportBody.appendChild(row);
+            });
+        });
+    </script>
+</body>
+</html>
