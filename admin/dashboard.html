@@ -84,7 +84,8 @@
     .header h1 {
       font-size: 1.8rem;
     }
-    .logout  {
+
+    .logout {
       padding: 0.5rem 1rem;
       background: var(--primary-color);
       color: white;
@@ -132,7 +133,6 @@
       color: var(--primary-color);
     }
 
-
     @media (max-width: 1024px) {
       .sidebar {
         width: 200px;
@@ -179,7 +179,7 @@
       <li><a href="#vehicles">Vehicles</a></li>
       <li><a href="#analytics">Analytics</a></li>
       <li><a href="#settings">Settings</a></li>
-      <li><a href="report_form.html">Report</a></li>
+      <li><a href="form.html">Report</a></li>
     </ul>
   </div>
 
@@ -191,15 +191,15 @@
     <div class="cards-container">
       <div class="card">
         <h3>Total Users</h3>
-        <p>456</p>
+        <p id="totalUsers">0</p>
       </div>
       <div class="card">
         <h3>Total Vehicles</h3>
-        <p>123</p>
+        <p id="totalVehicles">0</p>
       </div>
       <div class="card">
         <h3>Recent Activity</h3>
-        <p>Vehicle KA 35 A1234 registered by John Doe</p>
+        <p id="recentActivity">Loading...</p>
       </div>
     </div>
   </div>
@@ -208,6 +208,36 @@
     function toggleSidebar() {
       document.querySelector('.sidebar').classList.toggle('active');
     }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const reports = JSON.parse(localStorage.getItem("reports")) || [];
+
+      // Total Vehicles
+      const totalVehicles = reports.length;
+
+      // Unique Maintenance Incharges (as Users)
+      const usersSet = new Set();
+      reports.forEach(report => {
+        if (report.maintenanceIncharge) {
+          usersSet.add(report.maintenanceIncharge);
+        }
+      });
+      const totalUsers = usersSet.size;
+
+      // Recent Activity (latest entry)
+      const latest = reports[reports.length - 1];
+
+      // Update DOM
+      document.getElementById("totalUsers").textContent = totalUsers;
+      document.getElementById("totalVehicles").textContent = totalVehicles;
+
+      if (latest) {
+        document.getElementById("recentActivity").textContent =
+          `Vehicle ${latest.vehicleID} reported by ${latest.maintenanceIncharge}`;
+      } else {
+        document.getElementById("recentActivity").textContent = "No recent activity.";
+      }
+    });
   </script>
 </body>
 </html>

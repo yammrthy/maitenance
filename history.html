@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vehicle Maintenance History</title>
+  <style>
+    :root {
+      --primary-color: #204080;
+      --secondary-color: #f5f8fc;
+      --accent-color: #1a3366;
+      --text-color: #333;
+      --white: #ffffff;
+      --card-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', 'Roboto', sans-serif;
+      background: var(--secondary-color);
+      color: var(--text-color);
+      padding-top: 70px;
+      line-height: 1.5;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: var(--primary-color);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      box-shadow: var(--card-shadow);
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 22px;
+    }
+
+    .navbar-center-title {
+      font-size: 20px;
+      font-weight: 600;
+      text-align: center;
+      flex-grow: 1;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .search-container {
+      background: var(--white);
+      padding: 4px 8px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-container input {
+      border: none;
+      outline: none;
+      padding: 5px;
+      font-size: 14px;
+      background: none;
+    }
+
+    .hamburger {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .hamburger div {
+      width: 20px;
+      height: 2px;
+      background: var(--white);
+    }
+
+    /* Main Heading */
+    h1 {
+      text-align: center;
+      margin: 20px 0 10px;
+      color: var(--primary-color);
+      font-size: 28px;
+    }
+
+    /* History Details */
+    .history-details {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .report-card {
+      background: var(--white);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--card-shadow);
+      transition: 0.3s;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .report-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    }
+
+    .report-info {
+      text-align: left;
+      flex-grow: 1;
+    }
+
+    .report-info strong {
+      color: var(--primary-color);
+    }
+
+    .arrow-link {
+      font-size: 24px;
+      color: var(--primary-color);
+      margin-left: 10px;
+      flex-shrink: 0;
+    }
+
+    .arrow-link:hover {
+      color: var(--accent-color);
+    }
+
+    /* Back Button */
+    .back-btn {
+      display: block;
+      width: fit-content;
+      margin: 30px auto;
+      background: var(--primary-color);
+      color: var(--white);
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+
+    .back-btn:hover {
+      background: var(--accent-color);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 8px 10px;
+      }
+
+      .logo {
+        font-size: 18px;
+      }
+
+      .navbar-center-title {
+        font-size: 16px;
+      }
+
+      .search-container input {
+        width: 100px;
+        font-size: 12px;
+      }
+
+      .history-details {
+        padding: 10px;
+      }
+
+      .report-card {
+        flex-direction: row;
+        padding: 15px;
+      }
+
+      .report-info {
+        font-size: 14px;
+      }
+
+      h1 {
+        font-size: 22px;
+        margin-top: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+  <div class="logo">JSW</div>
+  <div id="dynamicTitle" class="navbar-center-title"></div>
+
+  <div class="navbar-right">
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Search...">
+    </div>
+    <div class="hamburger" id="hamburgerMenu">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Heading -->
+<h1 id="pageHeading">Maintenance Report for Vehicle</h1>
+
+<!-- History Details -->
+<div id="historyDetails" class="history-details"></div>
+
+<!-- Back Button -->
+<a href="javascript:history.back()" class="back-btn">← Back to Reports</a>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const userInput = urlParams.get('vehicleId'); // vehicleId or reg number from URL
+
+  const dynamicTitle = document.getElementById('dynamicTitle');
+  const pageHeading = document.getElementById('pageHeading');
+  const historyDetailsContainer = document.getElementById('historyDetails');
+  const searchInput = document.getElementById('searchInput');
+
+  if (!userInput) {
+    dynamicTitle.textContent = "Vehicle Not Found";
+    pageHeading.textContent = "No Vehicle Selected";
+    historyDetailsContainer.innerHTML = '<div style="text-align:center; padding:20px;">🚫 Vehicle ID or Reg Number not found.</div>';
+    return;
+  }
+
+  const searchValue = userInput.replace(/\s/g, '').toUpperCase();
+
+  const reports = JSON.parse(localStorage.getItem('reports')) || [];
+
+  // Matching reports based on either Vehicle ID or Registration Number
+  const vehicleReports = reports.filter(report => {
+    const vehicleId = (report[0] || '').replace(/\s/g, '').toUpperCase();
+    const regNumber = (report[8] || '').replace(/\s/g, '').toUpperCase();
+    return vehicleId === searchValue || regNumber === searchValue;
+  });
+
+  if (vehicleReports.length === 0) {
+    dynamicTitle.textContent = "No Reports Found";
+    pageHeading.textContent = "No Reports Found";
+    historyDetailsContainer.innerHTML = `<div style="text-align:center; padding:20px;">📋 No reports found for <strong>${userInput}</strong>.</div>`;
+    return;
+  }
+
+  
+  pageHeading.textContent = `Maintenance History - ${userInput}`;
+
+  vehicleReports.sort((a, b) => new Date(b[1]) - new Date(a[1]));
+
+  function renderReports(data) {
+    historyDetailsContainer.innerHTML = '';
+    if (data.length === 0) {
+      historyDetailsContainer.innerHTML = '<div style="text-align:center; padding:20px;">🔍 No matching reports found.</div>';
+      return;
+    }
+    data.forEach((report, index) => {
+      historyDetailsContainer.innerHTML += `
+        <a href="history_report.html?vehicleId=${encodeURIComponent(userInput)}&reportId=${index}" class="report-card">
+          <div class="report-info">
+            <div><strong>Report #${index + 1}</strong></div>
+            <div><strong>Date:</strong> ${report[1]}</div>
+            <div><strong>Problem:</strong> ${report[3]}</div>
+            <div><strong>Incharge:</strong> ${report[5]}</div>
+          </div>
+          <div class="arrow-link">➔</div>
+        </a>
+      `;
+    });
+  }
+
+  renderReports(vehicleReports);
+
+  // Live search inside the reports
+  searchInput.addEventListener('input', function() {
+    const query = searchInput.value.toLowerCase();
+    const filteredReports = vehicleReports.filter(report => 
+      report[1]?.toLowerCase().includes(query) ||
+      report[3]?.toLowerCase().includes(query) ||
+      report[5]?.toLowerCase().includes(query)
+    );
+    renderReports(filteredReports);
+  });
+});
+</script>
+
+</body>
+</html>

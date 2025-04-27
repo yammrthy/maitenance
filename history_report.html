@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Specific Vehicle Maintenance Report</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #edf1f5;
+      padding-top: 70px;
+      text-align: center;
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #204080;
+      padding: 15px 20px;
+      color: white;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+    }
+    .title {
+      font-size: 26px;
+      font-weight: bold;
+      text-align: center;
+      flex-grow: 1;
+    }
+    h1 {
+      margin-top: 120px;
+      font-size: 32px;
+      color: #333;
+    }
+    .report-details {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 30px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .report-details div {
+      margin-bottom: 15px;
+      font-size: 18px;
+      font-weight: 500;
+    }
+    .back-btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #204080;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .back-btn:hover {
+      background-color: #1a3366;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="navbar">
+    <div class="logo">JSW</div>
+    <div class="title">Vehicle Maintenance Report</div>
+  </div>
+
+
+  <div id="reportDetails" class="report-details">
+    <!-- Specific report details will be displayed here -->
+  </div>
+
+  <a href="history.html" class="back-btn">Back to History</a>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const vehicleId = urlParams.get('vehicleId');
+      const reportId = urlParams.get('reportId');
+
+      if (!vehicleId || !reportId) {
+        document.getElementById('reportDetails').innerHTML = 'Invalid parameters. Please ensure the correct vehicle and report ID are provided.';
+        return;
+      }
+
+      const reports = JSON.parse(localStorage.getItem('reports')) || [];
+      const vehicleReports = reports.filter(report => report[0] === vehicleId);
+      const report = vehicleReports[reportId];
+
+      if (!report) {
+        document.getElementById('reportDetails').innerHTML = 'Report not found.';
+        return;
+      }
+
+      const reportDetailsContainer = document.getElementById('reportDetails');
+      reportDetailsContainer.innerHTML = `
+        <div><strong>Date:</strong> ${report[1]}</div>
+        <div><strong>No of Days:</strong> ${report[2]}</div>
+        <div><strong>Problem:</strong> ${report[3]}</div>
+        <div><strong>Spares Status:</strong> ${report[4]}</div>
+        <div><strong>Incharge:</strong> ${report[5]}</div>
+        <div><strong>Contact:</strong> ${report[6]}</div>
+      `;
+    });
+  </script>
+
+</body>
+</html>
