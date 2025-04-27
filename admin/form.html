@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Vehicle Maintenance Form</title>
+  <title>Vehicle Maintenance Report</title>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary-color: #204080;
@@ -21,7 +23,7 @@
     }
 
     body {
-      font-family: 'Poppins', 'Roboto', sans-serif;
+      font-family: 'Roboto', sans-serif;
       background: var(--secondary-color);
       color: var(--text-color);
       padding: 20px;
@@ -73,6 +75,17 @@
     button:hover {
       background-color: var(--accent-color);
     }
+
+    .form-footer {
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+    }
+
+    .form-footer button {
+      background: #6c757d;
+    }
+
   </style>
 </head>
 <body>
@@ -80,31 +93,42 @@
 <h2>Vehicle Maintenance Report</h2>
 
 <form id="maintenanceForm">
-  <label for="vehicleId">Vehicle ID:</label>
-  <input type="text" id="vehicleId" required><br>
-
-  <label for="reportDate">Date of Maintenance:</label>
+  <label for="reportDate">Date:</label>
   <input type="date" id="reportDate" required><br>
 
-  <label for="issue">Issue Reported:</label>
-  <textarea id="issue" rows="4" required></textarea><br>
+  <label for="noOfDays">No of Days:</label>
+  <input type="number" id="noOfDays" required><br>
 
-  <label for="incharge">Incharge Person:</label>
+  <label for="problem">Problem:</label>
+  <textarea id="problem" rows="4" required></textarea><br>
+
+  <label for="sparesStatus">Spares Status:</label>
+  <input type="text" id="sparesStatus" required><br>
+
+  <label for="incharge">Incharge:</label>
   <input type="text" id="incharge" required><br>
 
-  <button type="submit">Submit Report</button>
+  <label for="contact">Contact:</label>
+  <input type="text" id="contact" required><br>
+
+  <div class="form-footer">
+    <button type="submit">Submit Report</button>
+    <button type="button" onclick="window.location.href='report.html'">Back to Reports</button>
+  </div>
 </form>
 
 <script>
   document.getElementById('maintenanceForm').addEventListener('submit', function(event) {
     event.preventDefault();
 
-    const vehicleId = document.getElementById('vehicleId').value.trim();
     const reportDate = document.getElementById('reportDate').value.trim();
-    const issue = document.getElementById('issue').value.trim();
+    const noOfDays = document.getElementById('noOfDays').value.trim();
+    const problem = document.getElementById('problem').value.trim();
+    const sparesStatus = document.getElementById('sparesStatus').value.trim();
     const incharge = document.getElementById('incharge').value.trim();
+    const contact = document.getElementById('contact').value.trim();
 
-    if (!vehicleId || !reportDate || !issue || !incharge) {
+    if (!reportDate || !noOfDays || !problem || !sparesStatus || !incharge || !contact) {
       alert('All fields are required!');
       return;
     }
@@ -112,8 +136,15 @@
     // Retrieve existing reports from localStorage
     let reports = JSON.parse(localStorage.getItem('reports')) || [];
 
-    // Create a new report
-    const newReport = [vehicleId, reportDate, issue, incharge];
+    // Create a new report object
+    const newReport = {
+      reportDate,
+      noOfDays,
+      problem,
+      sparesStatus,
+      incharge,
+      contact
+    };
 
     // Add the new report to the array
     reports.push(newReport);
