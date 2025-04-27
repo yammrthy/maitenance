@@ -269,10 +269,8 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
   }
 
-  
   pageHeading.textContent = `Maintenance History - ${userInput}`;
 
-  // Sorting reports by Date (Descending)
   vehicleReports.sort((a, b) => new Date(b[1]) - new Date(a[1]));
 
   function renderReports(data) {
