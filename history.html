@@ -113,8 +113,11 @@
         return;
       }
 
-      // Sort reports by Vehicle In Date (ascending)
-      reports.sort((a, b) => new Date(a.vehicleIn) - new Date(b.vehicleIn));
+      // Sort reports by Vehicle ID (ascending)
+      reports.sort((a, b) => {
+        // Sort by vehicleID (alphabetical order)
+        return a.vehicleID.localeCompare(b.vehicleID);
+      });
 
       const reportTableBody = document.getElementById("reportBody");
       const noDataMessage = document.getElementById("noDataMessage");
