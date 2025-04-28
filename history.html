@@ -27,10 +27,59 @@
       padding: 20px;
       line-height: 1.5;
     }
+/* Navbar */
+.navbar {
+  background: #204080;
+  color: white;
+  padding: 15px 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.menu-icon {
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.menu {
+  display: none;
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background: #204080;
+  width: 200px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.menu a {
+  display: block;
+  padding: 10px;
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.menu a:hover {
+  background-color: #1a3366;
+}
 
     h1 {
       text-align: center;
-      margin-bottom: 20px;
+      margin-top: 80px;
+      margin-bottom: 50px;
       color: var(--primary-color);
     }
 
@@ -82,7 +131,20 @@
 </head>
 <body>
 
+  <div class="navbar">
+    <div class="logo">JSW</div>
+    <div class="menu-icon" onclick="toggleMenu()">☰</div>
+  </div>
+  
+  <div class="menu" id="menu">
+    <a href="index.html">Home</a>
+    <a href="#">Service</a>
+    <a href="#">Contact</a>
+  </div>
+
+  
 <h1>Vehicle Maintenance History</h1>
+
 <div id="historyDetails"></div>
 <a href="javascript:history.back()" class="back-btn">← Back to Reports</a>
 
@@ -125,6 +187,11 @@
       `;
     });
   });
+  function toggleMenu() {
+    const menu = document.getElementById('menu');
+    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+  }
+
 </script>
 
 </body>
