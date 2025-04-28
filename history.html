@@ -27,54 +27,54 @@
       padding: 20px;
       line-height: 1.5;
     }
-/* Navbar */
-.navbar {
-  background: #204080;
-  color: white;
-  padding: 15px 20px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 1000;
-}
 
-.logo {
-  font-size: 20px;
-  font-weight: bold;
-}
+    .navbar {
+      background: #204080;
+      color: white;
+      padding: 15px 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
 
-.menu-icon {
-  font-size: 28px;
-  cursor: pointer;
-}
+    .logo {
+      font-size: 20px;
+      font-weight: bold;
+    }
 
-.menu {
-  display: none;
-  position: absolute;
-  top: 60px;
-  right: 0;
-  background: #204080;
-  width: 200px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 10px;
-  border-radius: 8px;
-}
+    .menu-icon {
+      font-size: 28px;
+      cursor: pointer;
+    }
 
-.menu a {
-  display: block;
-  padding: 10px;
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
-}
+    .menu {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background: #204080;
+      width: 200px;
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      border-radius: 8px;
+    }
 
-.menu a:hover {
-  background-color: #1a3366;
-}
+    .menu a {
+      display: block;
+      padding: 10px;
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    .menu a:hover {
+      background-color: #1a3366;
+    }
 
     h1 {
       text-align: center;
@@ -127,6 +127,11 @@
       color: var(--primary-color);
       margin-top: 50px;
     }
+
+    a.report-link {
+      text-decoration: none;
+      color: inherit;
+    }
   </style>
 </head>
 <body>
@@ -142,57 +147,84 @@
     <a href="#">Contact</a>
   </div>
 
-  
-<h1>Vehicle Maintenance History</h1>
+  <h1>Vehicle Maintenance History</h1>
 
-<div id="historyDetails"></div>
-<a href="javascript:history.back()" class="back-btn">← Back to Reports</a>
+  <div id="historyDetails"></div>
+  <a href="javascript:history.back()" class="back-btn">← Back to Reports</a>
 
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    const searchValue = urlParams.get("vehicleId")?.replace(/\s/g, "").toUpperCase();
-
-    const historyDetailsContainer = document.getElementById("historyDetails");
-    const reports = JSON.parse(localStorage.getItem("reports")) || [];
-
-    const vehicleReports = reports.filter(report => {
-      const vehicleId = report.vehicleID?.replace(/\s/g, "").toUpperCase();
-      const regNum = report.registrationNumber?.replace(/\s/g, "").toUpperCase();
-      return vehicleId === searchValue || regNum === searchValue;
-    });
-
-    if (vehicleReports.length === 0) {
-      historyDetailsContainer.innerHTML = `<div class="no-reports">No reports found for vehicle: <strong>${searchValue}</strong></div>`;
-      return;
+  <script>
+    // Preload sample data if not present
+    if (!localStorage.getItem("reports")) {
+      localStorage.setItem("reports", JSON.stringify([
+        {
+          vehicleID: "JSW123",
+          registrationNumber: "MH01AB1234",
+          vehicleIn: "2024-11-15",
+          noOfDays: 3,
+          problemIdentification: "Engine overheating",
+          sparesStatus: "Replaced thermostat",
+          maintenanceIncharge: "Rajesh Kumar",
+          userDeptContact: "9876543210"
+        },
+        {
+          vehicleID: "JSW124",
+          registrationNumber: "MH01AB5678",
+          vehicleIn: "2024-12-01",
+          noOfDays: 2,
+          problemIdentification: "Brake failure",
+          sparesStatus: "Brake pads replaced",
+          maintenanceIncharge: "Sunita Mehta",
+          userDeptContact: "9876501234"
+        }
+      ]));
     }
 
-    vehicleReports.sort((a, b) => new Date(b.vehicleIn) - new Date(a.vehicleIn));
+    document.addEventListener("DOMContentLoaded", function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const searchValue = urlParams.get("vehicleId")?.replace(/\s/g, "").toUpperCase();
 
-    vehicleReports.forEach((report, index) => {
-      historyDetailsContainer.innerHTML += `
-        <div class="report-card">
-          <div class="report-info">
-            <strong>Report #${index + 1}</strong><br>
-            <strong>Vehicle ID:</strong> ${report.vehicleID}<br>
-            <strong>Registration No:</strong> ${report.registrationNumber || '-'}<br>
-            <strong>Date:</strong> ${report.vehicleIn}<br>
-            <strong>No of Days:</strong> ${report.noOfDays}<br>
-            <strong>Problem:</strong> ${report.problemIdentification}<br>
-            <strong>Spares Status:</strong> ${report.sparesStatus}<br>
-            <strong>Incharge:</strong> ${report.maintenanceIncharge}<br>
-            <strong>Contact:</strong> ${report.userDeptContact}
-          </div>
-        </div>
-      `;
+      const historyDetailsContainer = document.getElementById("historyDetails");
+      const reports = JSON.parse(localStorage.getItem("reports")) || [];
+
+      const vehicleReports = reports.filter(report => {
+        const vehicleId = report.vehicleID?.replace(/\s/g, "").toUpperCase();
+        const regNum = report.registrationNumber?.replace(/\s/g, "").toUpperCase();
+        return vehicleId === searchValue || regNum === searchValue;
+      });
+
+      if (vehicleReports.length === 0) {
+        historyDetailsContainer.innerHTML = `<div class="no-reports">No reports found for vehicle: <strong>${searchValue}</strong></div>`;
+        return;
+      }
+
+      vehicleReports.sort((a, b) => new Date(b.vehicleIn) - new Date(a.vehicleIn));
+
+      vehicleReports.forEach((report) => {
+        const uniqueKey = encodeURIComponent(`${report.vehicleID}_${report.vehicleIn}`);
+        historyDetailsContainer.innerHTML += `
+          <a class="report-link" href="specific.html?key=${uniqueKey}">
+            <div class="report-card">
+              <div class="report-info">
+                <strong>Vehicle ID:</strong> ${report.vehicleID}<br>
+                <strong>Registration No:</strong> ${report.registrationNumber || '-'}<br>
+                <strong>Date:</strong> ${report.vehicleIn}<br>
+                <strong>No of Days:</strong> ${report.noOfDays}<br>
+                <strong>Problem:</strong> ${report.problemIdentification}<br>
+                <strong>Spares Status:</strong> ${report.sparesStatus}<br>
+                <strong>Incharge:</strong> ${report.maintenanceIncharge}<br>
+                <strong>Contact:</strong> ${report.userDeptContact}
+              </div>
+            </div>
+          </a>
+        `;
+      });
     });
-  });
-  function toggleMenu() {
-    const menu = document.getElementById('menu');
-    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-  }
 
-</script>
+    function toggleMenu() {
+      const menu = document.getElementById('menu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+  </script>
 
 </body>
 </html>
